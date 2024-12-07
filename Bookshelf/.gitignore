@@ -1,1 +1,8 @@
-/build/
+# Ignore all .class files
+*.class
+
+# Ignore the build directory
+build/
+
+# Ignore the target directory (if using Maven)
+target/
