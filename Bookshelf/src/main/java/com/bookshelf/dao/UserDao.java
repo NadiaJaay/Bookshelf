@@ -3,7 +3,9 @@ package com.bookshelf.dao;
 import com.bookshelf.beans.User;
 import com.bookshelf.connection.DBConnection;
 import com.bookshelf.connection.DBUtil;
+import com.bookshelf.libs.TokenGenerator;
 import com.bookshelf.libs.UUIDGenerator;
+import com.bookshelf.services.JavaEmailService;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 public class UserDao {
 
