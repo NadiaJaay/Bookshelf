@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", user); 
             session.setAttribute("loggedInUserId", userId); 
             session.setAttribute("loggedInUser", user.getUsername()); 
-            session.setAttribute("userEmail", email); 
+            session.setAttribute("email", email);
 
             System.out.println("Login successful - User ID: " + userId);
             System.out.println("Login successful - Username: " + user.getUsername());
