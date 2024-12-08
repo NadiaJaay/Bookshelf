@@ -29,9 +29,12 @@
 
  
         <h2>User Manager</h2>
+        
+       <!-- Display if edit button has clicked -->
         <c:if test="${not empty error}">
         <p class="error">${error}</p>
         </c:if>
+
 
          <table >
          <!-- manage button -->
@@ -52,14 +55,16 @@
              </tr>
            </thead>
          <tbody>
+         
+         
             <c:forEach var="userManagerDto" items="${userManagerDtos}">
-                <tr>
 
+                <tr>
                     <td>${userManagerDto.user.username}</td>
                     <td>${userManagerDto.user.email}</td>
                     <td>${userManagerDto.user.first_name}</td>
                     <td>${userManagerDto.user.last_name}</td>
-                    <td>${userManagerDto.address.city}, ${userManagerDto.address.province}</td>
+                    <td>${userManagerDto.address.address}, ${userManagerDto.address.city}, ${userManagerDto.address.province}, ${userManagerDto.address.country}, ${userManagerDto.address.postal_code}</td>
                     <td>${userManagerDto.userRole.role_name}</td>
                     <td>${userManagerDto.userRole.status}</td>
                     <td>${userManagerDto.totalReservation}</td>

@@ -170,7 +170,7 @@ public class UserDao {
         return exists;
     }
 
-    
+    // Authenticate User 
 	public static User authenticateUser(String email, String password) {
 		try (Connection connection = DBConnection.getDBInstance()) {
 	        String query = "SELECT * FROM bookshelf_user WHERE email = ? AND password = ? AND is_verified = TRUE";
@@ -194,6 +194,7 @@ public class UserDao {
 	    return null;
 	}
 	
+	// Find user_id by email
 	public static String findIdByEmail(String email) {
 	    String userId = null;
 	    String query = "SELECT user_id FROM bookshelf_user WHERE email = ?";
@@ -227,6 +228,7 @@ public class UserDao {
 	    return userId;
 	}
 	
+	//Get all users
 	public static List<User> getAllUsers(){
 		
 		List<User> users = new ArrayList<>();
@@ -261,6 +263,7 @@ public class UserDao {
 		
 	}
 	
+	// Delete user by user_id
 	public static boolean deleteUserByUserId(String user_id) {
 	    String query = "DELETE FROM bookshelf_user WHERE user_id = ?";
 
@@ -282,7 +285,7 @@ public class UserDao {
 	    return false; 
 	}
 
-	
+	// Get address_id by user_id
 	public static String findAddressId(String user_id) {
 		
 	    String address_id = null;
@@ -315,6 +318,7 @@ public class UserDao {
 	    return address_id;
 	}
 	
+	//Find how many users share same address
 	public static int countUsersByAddressId(String address_id) {
 	    int userCount = 0;
 
@@ -339,6 +343,61 @@ public class UserDao {
 	    }
 
 	    return userCount; 
+	}
+	
+	//Get user by user_id
+	public static User getUserById(String user_id) { 
+        try (Connection connection = DBConnection.getDBInstance()) {
+            String query = "SELECT * FROM bookshelf_user WHERE user_id = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, user_id);
+
+            ResultSet resultSet = statement.executeQuery();
+            
+            if (resultSet.next()) {
+            	
+                String current_user_id = resultSet.getString("user_id");
+                String email = resultSet.getString("email");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String first_name = resultSet.getString("first_name");
+                String last_name = resultSet.getString("last_name");
+                String address_id = resultSet.getString("address_id");
+                boolean is_verified = resultSet.getBoolean("is_verified");
+                
+                User user = new User(current_user_id, username, email, password, first_name, last_name, address_id, is_verified);
+
+                return user;
+            }
+        } catch (SQLException e) {
+            DBUtil.processException(e);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+	// update is_verified status
+	public static boolean updateIsVerified (String user_id, String new_status) {
+		Boolean is_verified =  Boolean.parseBoolean(new_status);
+		
+	    try (Connection connection = DBConnection.getDBInstance()) {
+	        String update_user_sql = "UPDATE bookshelf_user SET is_verified = ? WHERE user_id = ?";
+	        PreparedStatement preparedStmt = connection.prepareStatement(update_user_sql);
+	        preparedStmt.setBoolean(1, is_verified);
+	        preparedStmt.setString(2, user_id);
+
+	        int rowsUpdated = preparedStmt.executeUpdate();
+
+	        if (rowsUpdated > 0) {
+	            System.out.println("User verification status updated successfully.");
+	            return true;
+	        }
+	    } catch (SQLException e) {
+	        DBUtil.processException(e);
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+	    return false;
 	}
 	
 }

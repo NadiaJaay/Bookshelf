@@ -114,7 +114,55 @@ public class UserManagerServlet extends HttpServlet {
 
 	        if (editUser_id != null) {
 	        	
-	        	//redirect to editUser.jsp
+	          try {
+                   UserManagerDto userManagerDto = new UserManagerDto();
+                   UserRoleDto userRoleDto = new UserRoleDto();
+	        	
+	        	   //redirect to editUser.jsp
+	        	
+	               // find the user
+	        	   User user = UserDao.getUserById(editUser_id);
+	        	   userManagerDto.setUser(user);      
+	        	   
+	        	   System.out.println("[UserManageServlet]:Edit-user:"+user);
+	        	
+	        	   // get address
+	        	   String address_id =  user.getAddress_id();
+	        	   Address address = AddressDao.findAddressById(address_id);
+	           	   userManagerDto.setAddress(address);
+	           	   
+	            	System.out.println("[UserManageServlet]:Edit-address:"+address);
+	        	
+	        	   // get userRole
+	        	   String user_id = user.getUser_id();
+	        	   UserRole userRole = UserRoleDao.findUserRoleById(user_id);
+	        	
+        		   String role_id =  userRole.getRole_id();
+        		   String status =  userRole.getStatus();
+        		   String role_name = RoleDao.findRoleNameByRoleId(role_id);
+        		
+        		   System.out.println("[UserManagerServlet] role_name: "+role_name);
+        		
+        		   userRoleDto.setUser_role_id(role_id);
+        		   userRoleDto.setRole_name(role_name);
+        		   userRoleDto.setStatus(status);
+        		
+        		   userManagerDto.setUserRole(userRoleDto);   		        		
+        		
+        		   int totalReservation= ReservationDao.countReservationsByUserId(user_id);
+        		   userManagerDto.setTotalReservation(totalReservation);
+        		
+        		   request.setAttribute("userInfo", userManagerDto);
+        		   request.getRequestDispatcher("editUser.jsp").forward(request, response);
+        		   
+	          }catch(Exception e) {
+		            e.printStackTrace();
+		            request.setAttribute("error", "An error occurred. Please try again later.");
+		            response.sendRedirect("UserManager");
+		        }
+		         
+		           
+			 
 
 	        } else if (deleteUser_id != null) {
 	        	

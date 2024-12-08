@@ -126,5 +126,77 @@ public class UserRoleDao {
 
 	    return roleCount; 
 	}
+	// update role_id 
+	public static boolean updateRoleInUserRole(String user_id, String new_role_id) {
+	    Timestamp updatedDate = new Timestamp(System.currentTimeMillis()); 
+	    
+	    try (Connection connection = DBConnection.getDBInstance()) {
+	        String update_sql = 
+	            "UPDATE " + ApplicationDao.USER_ROLE_TABLE + 
+	            " SET role_id = ?, assigned_date = ? WHERE user_id = ?";
+	        
+	        PreparedStatement preparedStmt = connection.prepareStatement(update_sql);
+	        preparedStmt.setString(1, new_role_id);
+	        preparedStmt.setTimestamp(2, updatedDate);
+	        preparedStmt.setString(3, user_id);
+	      
+
+	        int rowsUpdated = preparedStmt.executeUpdate();
+	        return rowsUpdated > 0;
+
+	    } catch (SQLException e) {
+	        DBUtil.processException(e);
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+	    return false;
+	}
+	
+	// update role_id and status
+	public static boolean updateRoleAndStatusInUserRole(String user_id,String new_role_id, String new_status) {
+	    Timestamp updatedDate = new Timestamp(System.currentTimeMillis());
+	    try (Connection connection = DBConnection.getDBInstance()) {
+	        String update_sql = 
+	            "UPDATE " + ApplicationDao.USER_ROLE_TABLE + 
+	            " SET role_id = ?, assigned_date = ?, status = ? WHERE user_id = ?";
+	        
+	        PreparedStatement preparedStmt = connection.prepareStatement(update_sql);
+	        preparedStmt.setString(1, new_role_id);
+	        preparedStmt.setTimestamp(2, updatedDate);
+	        preparedStmt.setString(3, new_status);
+	        preparedStmt.setString(4, user_id);
+
+	        int rowsUpdated = preparedStmt.executeUpdate();
+	        return rowsUpdated > 0;
+
+	    } catch (SQLException e) {
+	        DBUtil.processException(e);
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+	    return false;
+	}
+	
+	//update status
+	public static boolean updateStatusInUserRole(String user_id, String new_status) {
+	    try (Connection connection = DBConnection.getDBInstance()) {
+	        String update_sql = 
+	            "UPDATE " + ApplicationDao.USER_ROLE_TABLE + 
+	            " SET status = ? WHERE user_id = ?";
+	        
+	        PreparedStatement preparedStmt = connection.prepareStatement(update_sql);
+	        preparedStmt.setString(1, new_status);
+	        preparedStmt.setString(2, user_id);
+
+	        int rowsUpdated = preparedStmt.executeUpdate();
+	        return rowsUpdated > 0;
+
+	    } catch (SQLException e) {
+	        DBUtil.processException(e);
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+	    return false;
+	}
 	
 }
